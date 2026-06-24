@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decidr — Stop Overthinking. Start Deciding.</title>
+    <meta name="description" content="Free decision-making app. No signup. Works offline. Compare options, score factors, get a winner.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1; --primary-dark: #4f46e5; --success: #10b981;
+            --bg: #0f172a; --card: #1e293b; --text: #f1f5f9;
+            --text-dim: #94a3b8; --border: #334155;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.6;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* HERO */
+        .hero { padding: 100px 0 80px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.15) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .hero-badge {
+            display: inline-block; background: rgba(99,102,241,0.15); color: var(--primary);
+            padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 24px;
+            border: 1px solid rgba(99,102,241,0.3);
+        }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+        .hero h1 span { background: linear-gradient(135deg, var(--primary), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: var(--text-dim); max-width: 560px; margin: 0 auto 40px; }
+        .cta-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 16px 32px; border-radius: 14px; font-size: 1rem; font-weight: 600;
+            cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; box-shadow: 0 4px 20px rgba(99,102,241,0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.4); }
+        .btn-secondary { background: transparent; color: var(--text); border: 2px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* PHONE MOCKUP */
+        .phone-section { padding: 40px 0 80px; display: flex; justify-content: center; }
+        .phone {
+            width: 300px; height: 600px; background: var(--card); border-radius: 40px;
+            border: 8px solid #1e293b; box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            position: relative; overflow: hidden;
+        }
+        .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 28px; background: #1e293b; border-radius: 0 0 20px 20px; }
+        .phone-screen { padding: 50px 16px 20px; height: 100%; overflow-y: auto; }
+        .phone-card { background: #0f172a; border-radius: 14px; padding: 14px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .phone-card h4 { font-size: 0.8rem; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .phone-input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #1e293b; color: var(--text); font-size: 0.8rem; margin-bottom: 6px; }
+        .phone-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; border-radius: 10px; font-size: 0.85rem; font-weight: 600; text-align: center; }
+        .phone-bar { height: 8px; background: #1e293b; border-radius: 4px; margin: 6px 0; overflow: hidden; }
+        .phone-bar-fill { height: 100%; width: 78%; background: linear-gradient(90deg, var(--success), #34d399); border-radius: 4px; }
+
+        /* FEATURES */
+        .features { padding: 80px 0; }
+        .section-title { text-align: center; font-size: 2rem; font-weight: 700; margin-bottom: 12px; }
+        .section-sub { text-align: center; color: var(--text-dim); margin-bottom: 60px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .feature-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px;
+            transition: all 0.3s;
+        }
+        .feature-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 40px rgba(99,102,241,0.1); }
+        .feature-icon { font-size: 2.5rem; margin-bottom: 16px; }
+        .feature-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+        .feature-card p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; }
+
+        /* HOW IT WORKS */
+        .how-it-works { padding: 80px 0; background: rgba(99,102,241,0.03); }
+        .steps { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-top: 60px; }
+        .step { text-align: center; max-width: 240px; }
+        .step-num {
+            width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700;
+            margin: 0 auto 16px;
+        }
+        .step h4 { font-size: 1rem; margin-bottom: 8px; }
+        .step p { color: var(--text-dim); font-size: 0.85rem; }
+
+        /* TESTIMONIALS */
+        .testimonials { padding: 80px 0; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 40px; }
+        .testimonial {
+            background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px;
+        }
+        .testimonial-text { font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px; color: var(--text); }
+        .testimonial-author { display: flex; align-items: center; gap: 12px; }
+        .testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #a78bfa); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
+        .testimonial-name { font-weight: 600; font-size: 0.9rem; }
+        .testimonial-role { font-size: 0.8rem; color: var(--text-dim); }
+
+        /* CTA SECTION */
+        .cta-section { padding: 100px 0; text-align: center; }
+        .cta-section h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; }
+        .cta-section p { color: var(--text-dim); font-size: 1.1rem; margin-bottom: 40px; }
+
+        /* FOOTER */
+        footer { padding: 40px 0; text-align: center; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.85rem; }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .phone { width: 260px; height: 520px; }
+            .steps { flex-direction: column; align-items: center; }
+        }
+    </style>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">🎯 Free Decision-Making App</div>
+            <h1>Stop Overthinking.<br><span>Start Deciding.</span></h1>
+            <p>Compare options, score what matters, and let the math pick your winner. No signup. No ads. Works offline.</p>
+            <div class="cta-group">
+                <a href="https://decidrapp.netlify.app/" class="btn btn-primary">🚀 Try Decidr Free</a>
+                <a href="#features" class="btn btn-secondary">📱 See Features</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="phone-section">
+        <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+                <div style="text-align:center;margin-bottom:16px;">
+                    <div style="font-size:1.5rem;font-weight:700;">🎯 Decidr</div>
+                    <div style="font-size:0.7rem;color:var(--text-dim);">Make better decisions</div>
+                </div>
+                <div class="phone-card">
+                    <h4>🤔 What are you deciding?</h4>
+                    <div class="phone-input">Which laptop to buy?</div>
+                </div>
+                <div class="phone-card">
+                    <h4>📋 Your Options</h4>
+                    <div class="phone-input">MacBook Air</div>
+                    <div class="phone-input">ThinkPad X1</div>
+                </div>
+                <div class="phone-card">
+                    <h4>⚖️ What Matters Most?</h4>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                        <span style="background:rgba(99,102,241,0.2);padding:4px 10px;border-radius:8px;font-size:0.7rem;">💰 Cost</span>
+                        <span style="background:rgba(99,102,241,0.2);padding:4px 10px;border-radius:8px;font-size:0.7rem;">⭐ Quality</span>
+                        <span style="background:rgba(99,102,241,0.2);padding:4px 10px;border-radius:8px;font-size:0.7rem;">⏱️ Speed</span>
+                    </div>
+                </div>
+                <div class="phone-btn">Start Scoring →</div>
+                <div class="phone-card" style="margin-top:16px;border-color:var(--success);">
+                    <h4>🏆 Winner</h4>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--success);">ThinkPad X1</div>
+                    <div style="font-size:0.75rem;color:var(--text-dim);margin-top:4px;">78% — 12% ahead</div>
+                    <div class="phone-bar"><div class="phone-bar-fill"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Everything You Need to Decide</h2>
+            <p class="section-sub">No spreadsheets. No overthinking. Just structured clarity.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Smart Templates</h3>
+                    <p>Job offers, apartments, trips, purchases — start with a pre-built scenario or go blank.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚖️</div>
+                    <h3>Weighted Scoring</h3>
+                    <p>Not all factors are equal. Adjust importance from 1x to 5x and watch the math work.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💭</div>
+                    <h3>Pros & Cons</h3>
+                    <p>Brain-dump your thoughts. They appear as reminders during scoring so nothing gets forgotten.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Sensitivity Analysis</h3>
+                    <p>"What if cost mattered less?" See if your winner holds up when priorities shift.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🪙</div>
+                    <h3>Tiebreaker Coin Flip</h3>
+                    <p>When results are too close, flip a coin with satisfying animation. Let fate decide.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📤</div>
+                    <h3>Share Results</h3>
+                    <p>Copy a clean summary or share natively. Show your work. Defend your choice.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>Decision Timer</h3>
+                    <p>Set a deadline. Beat analysis paralysis with a ticking clock. Time's up = time to choose.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌙</div>
+                    <h3>Dark Mode</h3>
+                    <p>System-aware and manual toggle. Easy on the eyes, day or night.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Works Offline</h3>
+                    <p>PWA support. Add to home screen. No internet, no problem. Your decisions stay private.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-sub">Three steps from confusion to clarity.</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h4>Add Your Options</h4>
+                    <p>Type in what you're choosing between. Add pros and cons for each. Pick the factors that matter.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h4>Score Each Factor</h4>
+                    <p>Rate every option on every factor (1-5). Your notes pop up as reminders. No forgetting why you cared.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h4>See Your Winner</h4>
+                    <p>Animated results. Full math breakdown. Sensitivity analysis. Share it, calendar it, or flip a coin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What People Are Saying</h2>
+            <p class="section-sub">Real decisions. Real results. Real relief.</p>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <div class="testimonial-text">"I was stuck between two job offers for 3 weeks. Decidr made it obvious in 5 minutes. I accepted the next day."</div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">S</div>
+                        <div>
+                            <div class="testimonial-name">Sarah K.</div>
+                            <div class="testimonial-role">Product Manager</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">"My partner and I use this for everything — where to eat, which movie, where to vacation. No more 'I don't know, what do you want?'"</div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">M</div>
+                        <div>
+                            <div class="testimonial-name">Marcus T.</div>
+                            <div class="testimonial-role">Software Engineer</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">"The sensitivity analysis is genius. I realized my 'winner' only won because I over-weighted cost. Changed my whole perspective."</div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">J</div>
+                        <div>
+                            <div class="testimonial-name">Jenna R.</div>
+                            <div class="testimonial-role">Grad Student</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Your Next Decision Is Waiting.</h2>
+            <p>Free. No signup. No ads. Works on any phone, tablet, or laptop.</p>
+            <div class="cta-group">
+                <a href="https://decidrapp.netlify.app/" class="btn btn-primary" style="font-size:1.1rem;padding:18px 40px;">🎯 Launch Decidr Now</a>
+            </div>
+            <p style="margin-top:24px;font-size:0.85rem;color:var(--text-dim);">Built with HTML, CSS, and JavaScript. Deployed on Netlify. Open source soon.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>🎯 Decidr — Made for people who overthink everything. © 2026</p>
+        </div>
+    </footer>
+</body>
+</html>
